@@ -28,6 +28,7 @@ const Home = (props) => {
   const [predictions, setPredictions] = useState([]);
 
 
+
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -45,6 +46,10 @@ const Home = (props) => {
   // Fetch projects from API
   useEffect(() => {
     fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    fetchImages();
   }, []);
 
   const fetchProjects = async () => {
@@ -123,7 +128,7 @@ const Home = (props) => {
           fetchTags(project.id),
           fetchImages(project.id),
           fetchPerformance(project.id),
-          fetchPredictions(project.id)
+          fetchPredictions(project.id)``
         ]);
       } catch (error) {
         console.error("Error fetching project details:", error);
@@ -140,11 +145,19 @@ const Home = (props) => {
       }
     };
     
+
+
+    
   
-    const fetchImages = async (projectId) => {
+    const fetchImages = async () => {
       try {
-        const response = await axios.get(`http://localhost:5037/api/customvision/get-images?projectId=${projectId}`);
+        // Replace with your backend API that fetches image URLs from Azure Blob Storage
+        const response = await axios.get("http://localhost:5037/api/customvision/list-images");
         setImages(response.data);
+        
+        console.log(response);
+        console.log("Images:",response);
+
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -284,12 +297,14 @@ const Home = (props) => {
           {/* Images Section */}
           <Typography variant="h6" sx={{ mt: 4 }}>Training Images:</Typography>
           <Grid container spacing={2}>
-            {images.map((img) => (
-              <Grid item key={img.id}>
-                <img src={img.url} alt={img.name} width="150" height="150" />
+            {images.map((img, index) => (
+              <Grid item key={index}>
+                <img src={img} alt={index} width="150" height="150" />
               </Grid>
+
             ))}
           </Grid>
+          
 
           {/* Performance Section */}
           {performance && (
